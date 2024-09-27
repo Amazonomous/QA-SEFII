@@ -1,0 +1,75 @@
+{% block content %}
+{% import "bootstrap/form.html" as wtf %}
+
+<br>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Owner</th>
+      <th>Device Serial Number</th>
+      <th>Location Code</th>
+      <th>Condition</th>
+      <th>Program</th>
+      <th>Last updated</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for device in devices %}
+    <tr>
+      <td>{{ device.assignee }}</td>
+      <td>{{ device.dsn }}</td>
+      <td>{{ device.location_code }}</td>
+      <td>{{ device.condition }}</td>
+      <td>{{ device.program }}</td>
+      <td>{{ device.last_updated }}</td>
+      <td>
+        {% if user.id == 1 %}
+          <button type="button" class="close" onClick="confirmDeleteDevice('{{ device.dsn }}')">
+            <span aria-hidden="true">✕</span>
+          </button>
+          <button type="button" class="close" onClick="updateDevice('{{ device.dsn }}')">
+            <span aria-hidden="true">&#8634;</span>
+          </button>
+        {% endif %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</ul>
+
+{% block javascript %}
+<script type="text/javascript">
+  function confirmDeleteDevice(dsn) {
+    const confirmDelete = confirm('Are you sure you want to delete this device?');
+      if (confirmDelete) {
+        deleteDevice(dsn);
+      }
+    }
+    function deleteDevice(dsn) {
+        fetch("/delete-device", {
+            method: "POST",
+            body: JSON.stringify({ dsn: dsn }),
+        }).then((_res) => {
+            window.location.href = "/";
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+    function updateDevice(dsn) {
+        fetch("/update-device", {
+            method: "POST",
+            body: JSON.stringify({ dsn: dsn }),
+        }).then((_res) => {
+            window.location.href = "/";
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+</script>
+{% endblock %}
+
+{% endblock %}

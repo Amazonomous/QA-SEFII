@@ -1,0 +1,22 @@
+{% block content %}
+{% import "bootstrap/form.html" as wtf %}
+
+<form method="POST">
+    {{ device_form.csrf_token }}
+    <div class="form-container">
+        <div class="form-column">
+            {{ wtf.form_field(device_form.device_dsn) }}
+            {{ wtf.form_field(device_form.device_location_code) }}
+        </div>
+        <div class="form-column">
+            {{ wtf.form_field(device_form.device_condition) }}
+            {{ wtf.form_field(device_form.device_program) }}
+        </div>
+    </div>
+    <div align="center">
+        {{ device_form.add_button(class="btn btn-primary mr-2") }}
+        {{ device_form.update_button(class="btn btn-primary mr-2") }}
+    </div>
+</form>
+
+{% endblock %}
